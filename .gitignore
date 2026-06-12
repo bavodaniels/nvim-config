@@ -1,0 +1,5 @@
+# lazy.nvim / plugin runtime state lives in ~/.local/share/nvim, not here,
+# but ignore anything nvim might drop into the config dir
+.luarc.json
+*.swp
+.DS_Store
