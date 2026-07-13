@@ -47,31 +47,19 @@ return {
   -- Buffer/tab line (IntelliJ editor tabs)
   {
     "akinsho/bufferline.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { "nvim-tree/nvim-web-devicons", "famiu/bufdelete.nvim" },
     event = "VeryLazy",
+    keys = {
+      { "<S-Right>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
+      { "<S-Left>", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
+      { "<S-q>", "<cmd>Bdelete<cr>", desc = "Close buffer" },
+    },
     opts = {
       options = {
         diagnostics = "nvim_lsp",
         offsets = {
           { filetype = "neo-tree", text = "Project", separator = true, text_align = "left" },
         },
-      },
-    },
-  },
-
-  -- Keybinding discovery popup
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {
-      preset = "modern",
-      spec = {
-        { "<leader>f", group = "find" },
-        { "<leader>c", group = "code" },
-        { "<leader>d", group = "debug" },
-        { "<leader>t", group = "tree/test" },
-        { "<leader>b", group = "buffer" },
-        { "<leader>e", group = "extract" },
       },
     },
   },

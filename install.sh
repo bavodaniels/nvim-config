@@ -26,15 +26,17 @@ command -v nvim >/dev/null 2>&1 || error "neovim is required but not installed.
 
 NVIM_VERSION="$(nvim --version | head -n1 | sed 's/^NVIM v//')"
 NVIM_MINOR="$(printf '%s' "$NVIM_VERSION" | cut -d. -f2)"
-if [ "${NVIM_MINOR:-0}" -lt 10 ]; then
-  error "neovim >= 0.10 is required (found $NVIM_VERSION)."
+if [ "${NVIM_MINOR:-0}" -lt 11 ]; then
+  error "neovim >= 0.11 is required (found $NVIM_VERSION) — the config uses the vim.lsp.config API."
 fi
 info "Found neovim $NVIM_VERSION"
 
 # --- Optional tools -----------------------------------------------------------
 
 command -v rg >/dev/null 2>&1 || warn "ripgrep not found — telescope live grep won't work. (brew install ripgrep / apt install ripgrep)"
-command -v cc >/dev/null 2>&1 || command -v gcc >/dev/null 2>&1 || warn "No C compiler found — treesitter parsers can't compile."
+command -v cc >/dev/null 2>&1 || command -v gcc >/dev/null 2>&1 || warn "No C compiler found — treesitter parsers and telescope-fzf-native can't compile."
+command -v make >/dev/null 2>&1 || warn "make not found — telescope-fzf-native build step will fail. (brew install make / apt install build-essential)"
+command -v tree-sitter >/dev/null 2>&1 || warn "tree-sitter CLI not found — tree-sitter-manager auto-install needs it. (brew install tree-sitter / npm install -g tree-sitter-cli)"
 command -v node >/dev/null 2>&1 || warn "Node.js not found — some Mason-managed LSP servers need it."
 command -v java >/dev/null 2>&1 || warn "Java not found — install JDK 17+ for the Java toolchain (jdtls)."
 

@@ -15,14 +15,21 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- leader is set in bavo.options (loaded before this file)
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
+-- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- import every file under lua/bavo/plugins/
-    { import = "bavo.plugins" },
+    -- import your plugins
+    { import = "plugins" },
   },
-  install = { colorscheme = { "rose-pine", "habamax" } },
-  checker = { enabled = true, notify = false },
-  change_detection = { notify = false },
+  -- Configure any other settings here. See the documentation for more details.
+  -- colorscheme that will be used when installing plugins.
+  install = { colorscheme = { "habamax" } },
+  -- automatically check for plugin updates
+  checker = { enabled = true },
 })

@@ -6,13 +6,13 @@ My personal Neovim configuration. Lua-based, managed with [lazy.nvim](https://gi
 
 - **Plugin manager**: lazy.nvim (auto-bootstraps on first launch)
 - **Colorscheme**: rose-pine
-- **Fuzzy finding**: telescope.nvim
-- **Syntax**: nvim-treesitter
-- **LSP**: nvim-lspconfig + mason.nvim (auto-installs servers: jdtls, lua-language-server, stylua, ...)
-- **Completion**: blink.cmp + friendly-snippets
-- **Debugging**: nvim-dap + nvim-dap-ui (Java debug adapter via Mason)
-- **Java**: nvim-jdtls with dedicated `ftplugin/java.lua` setup
-- **UI**: lualine, bufferline, neo-tree, gitsigns, which-key, indent-blankline
+- **Fuzzy finding**: telescope.nvim + telescope-fzf-native
+- **Syntax**: nvim-treesitter parsers, auto-installed via tree-sitter-manager.nvim
+- **LSP**: mason.nvim (auto-installs jdtls, lemminx, java-debug-adapter, java-test, vscode-spring-boot-tools)
+- **Completion**: blink.cmp
+- **Debugging**: nvim-dap + nvim-dap-ui (Java debug adapter wired through nvim-jdtls)
+- **Java**: nvim-jdtls (started per-buffer from a FileType autocmd) + spring-boot.nvim
+- **UI**: lualine, bufferline, neo-tree, gitsigns, nvim-autopairs, indent-blankline
 
 ## Layout
 
@@ -20,14 +20,19 @@ My personal Neovim configuration. Lua-based, managed with [lazy.nvim](https://gi
 .
 ├── init.lua                  # entry point, requires lua/bavo
 ├── lazy-lock.json            # pinned plugin versions
-├── ftplugin/
-│   └── java.lua              # jdtls per-buffer setup
-└── lua/bavo/
-    ├── init.lua              # loads options, keymaps, lazy
-    ├── options.lua
-    ├── keymaps.lua
-    ├── lazy.lua              # lazy.nvim bootstrap + plugin spec import
+└── lua/
+    ├── bavo.lua              # requires config.lazy
+    ├── config/
+    │   └── lazy.lua          # lazy.nvim bootstrap, leader keys, plugin spec import
     └── plugins/              # one file per plugin (or group)
+        ├── init.lua          # treesitter parser manager
+        ├── telescope.lua
+        ├── theme.lua         # rose-pine
+        ├── completion.lua    # blink.cmp
+        ├── mason.lua         # LSP/DAP tool installer
+        ├── java.lua          # jdtls + spring-boot + lemminx
+        ├── dap.lua           # nvim-dap + dap-ui
+        └── neotree.lua       # neo-tree, lualine, bufferline, gitsigns, ...
 ```
 
 ## Installation
@@ -42,7 +47,7 @@ cd nvim-config
 
 The script will:
 
-1. Check that `git` and `nvim` (0.10+) are installed
+1. Check that `git` and `nvim` (0.11+) are installed
 2. Back up any existing `~/.config/nvim` to `~/.config/nvim.backup.<timestamp>`
 3. Symlink this repo to `~/.config/nvim` (so edits here take effect immediately)
 4. Run a headless `Lazy! restore` to install all plugins at the pinned versions
@@ -51,9 +56,10 @@ LSP servers and the Java debug tooling are installed automatically by Mason on f
 
 ## Requirements
 
-- Neovim >= 0.10
+- Neovim >= 0.11 (the config uses the `vim.lsp.config` API)
 - git
-- A C compiler (for treesitter parsers)
+- A C compiler and `make` (for treesitter parsers and telescope-fzf-native)
+- The [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter) — parser auto-install
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — telescope live grep
 - A [Nerd Font](https://www.nerdfonts.com/) in your terminal — icons
 - JDK 17+ — for the Java toolchain (jdtls)
